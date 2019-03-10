@@ -1,4 +1,4 @@
-var Snake = function(stage, assetManager, maxSpeed) {
+var Polar = function(stage, assetManager, maxSpeed) {
     "use strict";
     
     // initialization
@@ -9,11 +9,10 @@ var Snake = function(stage, assetManager, maxSpeed) {
     var me = this;
 
     // construct custom event objects
-    var eventSnakeKilled = new createjs.Event("onSnakeKilled", true);
-    var eventSnakeSpeedChange = new createjs.Event("onSnakeSpeedChange", true);
+    var eventBearKilled = new createjs.Event("onBearKilled", true);
 
     // grab clip for Snake and add to stage canvas
-    var sprite = assetManager.getSprite("assets");
+    var sprite = assetManager.getSprite("polarSprites");
     var spriteMover = new Mover(sprite, stage);
     stage.addChild(sprite);
 
@@ -52,33 +51,19 @@ var Snake = function(stage, assetManager, maxSpeed) {
     };
 
     this.resetMe = function() {
-        sprite.gotoAndStop("snakeAlive");
+        sprite.gotoAndStop("polarAlive");
         sprite.x = 280;
         sprite.y = 300;
         spriteMover.setSpeed(maxSpeed);
     };
 
-    this.energizeMe = function() {
-        // snake can only gain more energy if less than maximum
-        if (spriteMover.getSpeed() < maxSpeed) {
-            spriteMover.setSpeed(spriteMover.getSpeed() + 1);
-            sprite.dispatchEvent(eventSnakeSpeedChange);
-        }
-		
-		console.log("Snake energized: " + spriteMover.getSpeed());
-		
-        // reset slowdown timer so the interval starts again
-        window.clearInterval(slowDownTimer);
-        slowDownTimer = window.setInterval(onSlowMe, slowDownDelay);
-    };
 
     this.killMe = function() {
         if (!killed) {
             killed = true;
             spriteMover.stopMe();
             // kill slowdown timer
-            window.clearInterval(slowDownTimer);
-            sprite.gotoAndPlay("snakeDead");
+            sprite.gotoAndPlay("polarDead");
             sprite.addEventListener("animationend", onKilled);
         }
     };
@@ -93,7 +78,7 @@ var Snake = function(stage, assetManager, maxSpeed) {
         spriteMover.setSpeed(spriteMover.getSpeed() - 1);
         sprite.dispatchEvent(eventSnakeSpeedChange);
         
-        console.log("Snake slowed: " + spriteMover.getSpeed());        
+        console.log("Polar slowed: " + spriteMover.getSpeed());        
         
         // check if snake is dead
         if (spriteMover.getSpeed() <= 0) {
@@ -106,6 +91,6 @@ var Snake = function(stage, assetManager, maxSpeed) {
         sprite.stop();
         e.remove();
         // dispatch event that snake has been killed!
-        sprite.dispatchEvent(eventSnakeKilled);
+        sprite.dispatchEvent(onBearKilled);
     }
 };
